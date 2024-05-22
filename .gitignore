@@ -177,3 +177,6 @@ fastapi_*.pid
 
 # Streamlit
 .streamlit/
+
+# Custom dirs in examples
+example/uploads/
