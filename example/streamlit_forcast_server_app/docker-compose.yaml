@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  main_app:
+    build: .
+    container_name: "streamlit_forecast_container"
+    restart: always
+    environment:
+      - STREAMLIT_SERVER_PORT=8501
+    ports:
+      - "8501:8501"
