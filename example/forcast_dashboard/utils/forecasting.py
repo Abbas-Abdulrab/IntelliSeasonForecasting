@@ -1,3 +1,5 @@
+
+
 import pandas as pd
 import numpy as np
 from prophet import Prophet
@@ -31,10 +33,18 @@ def forecast_with_prophet(cleaned_df, date_column, target_column, period, season
     
     forecast = model.predict(future)
     return forecast, model, train_df, test_df
-
 def validate_forecast(model, train_df, test_df):
     forecast = model.predict(test_df[['ds']])
     actual = test_df['y'].values
     predicted = forecast['yhat'].values
-    error = np.mean(np.abs(predicted - actual))
-    return error, actual, predicted
+    percentage_errors = np.abs((actual - predicted) / actual) * 100
+    min_error = np.min(percentage_errors)
+    max_error = np.max(percentage_errors)
+    return min_error, max_error, actual, predicted
+
+# def validate_forecast(model, train_df, test_df):
+#     forecast = model.predict(test_df[['ds']])
+#     actual = test_df['y'].values
+#     predicted = forecast['yhat'].values
+#     error = np.mean(np.abs(predicted - actual))
+#     return error, actual, predicted
