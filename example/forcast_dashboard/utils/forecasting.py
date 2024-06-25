@@ -1,5 +1,4 @@
 
-
 import pandas as pd
 import numpy as np
 from prophet import Prophet
@@ -33,6 +32,7 @@ def forecast_with_prophet(cleaned_df, date_column, target_column, period, season
     
     forecast = model.predict(future)
     return forecast, model, train_df, test_df
+
 def validate_forecast(model, train_df, test_df):
     forecast = model.predict(test_df[['ds']])
     actual = test_df['y'].values
@@ -48,3 +48,4 @@ def validate_forecast(model, train_df, test_df):
 #     predicted = forecast['yhat'].values
 #     error = np.mean(np.abs(predicted - actual))
 #     return error, actual, predicted
+

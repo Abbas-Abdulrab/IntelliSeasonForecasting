@@ -13,6 +13,7 @@ class DataCleaner:
 
     def filter_data(self, column, value):
         self.df[self.df[column] == value]
+
         return self.df[self.df[column] == value]
 
     def aggregate_data(self, date_column, target_column, additional_columns):

@@ -63,8 +63,10 @@ def main():
             if st.button("Run Forecast"):
                 cleaner = DataCleaner(df)
                 filtered_df = cleaner.filter_data(filter_column, filter_value)
+
                 cleaned_df = DataCleaner(filtered_df).clean_data(date_column)
-                aggregated_df = DataCleaner(cleaned_df).aggregate_data(date_column, target_column, additional_columns)
+                aggregated_df = DataCleaner(cleaned_df).aggregate_data(date_column, target_column, additional_columns
+
                 forecast, model, train_df, test_df = forecast_with_prophet(aggregated_df, date_column, 'y', period, seasonality, additional_columns)
                 st.plotly_chart(plot_forecast(model, forecast))
                 st.plotly_chart(plot_seasonality(model, forecast))
@@ -75,6 +77,7 @@ def main():
                 # error, actual, predicted = validate_forecast(model, train_df, test_df)
                 # st.write(f"Validation MAE: {error}")
                 # st.plotly_chart(plot_validation(test_df['ds'], actual, predicted))
+
 
 
     elif selected == "Compare Forecast":
