@@ -13,6 +13,11 @@ redirect_uri = 'http://localhost:8080/callback'
 authorization_base_url = 'https://accounts.google.com/o/oauth2/auth'
 token_url = 'https://oauth2.googleapis.com/token'
 
+# GCP details
+project_id = ''
+endpoint_id = ''
+predict_url_template = ''
+
 class OAuth2App:
     def __init__(self):
         pass
@@ -53,7 +58,7 @@ class OAuth2App:
             return f"No authorization code found. Parameters received: state={state}, code={code}, scope={scope}"
 
     @cherrypy.expose
-    def model(self, model_url=None):
+    def model(self):
         """Step 3: Accessing the model endpoint.
         Use the access token to retrieve results from the specified model URL.
         """
@@ -61,21 +66,23 @@ class OAuth2App:
         if not oauth_token:
             return "No access token available. Please authenticate first."
 
-        if not model_url:
-            return "Please provide the model URL."
-
+        model_url = predict_url_template.format(project_id=project_id, endpoint_id=endpoint_id)
         headers = {
             'Authorization': f'Bearer {oauth_token["access_token"]}',
             'Content-Type': 'application/json'
         }
-        # Assuming payload is required
+        # Adjust the payload to match the expected format
         payload = json.dumps({
-            # Replace with actual payload data needed for your model
-            "series": [
-                [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
-                [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
-            ],
-            "frequency": [1, 1]
+            "instances": [
+                {
+                "input": [
+                    0,
+                    0.3,
+                    -0.2
+                ],
+                "freq": 2
+                }
+            ]
         })
 
         response = requests.post(model_url, headers=headers, data=payload)
