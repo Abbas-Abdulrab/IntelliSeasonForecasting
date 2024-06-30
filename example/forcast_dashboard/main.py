@@ -1,9 +1,23 @@
+import logging
+
 import streamlit as st
 from streamlit_option_menu import option_menu
 from utils.data_loading import load_csv
 from utils.data_cleaning import DataCleaner
 from utils.forecasting import forecast_with_prophet, validate_forecast
 from utils.visualization import plot_forecast, plot_seasonality, plot_validation
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler("app.log")
+    ]
+)
+
+# Create a logger
+logger = logging.getLogger(__name__)
 
 def local_css(file_name):
     with open(file_name) as f:
@@ -65,7 +79,7 @@ def main():
                 filtered_df = cleaner.filter_data(filter_column, filter_value)
 
                 cleaned_df = DataCleaner(filtered_df).clean_data(date_column)
-                aggregated_df = DataCleaner(cleaned_df).aggregate_data(date_column, target_column, additional_columns
+                aggregated_df = DataCleaner(cleaned_df).aggregate_data(date_column, target_column, additional_columns)
 
                 forecast, model, train_df, test_df = forecast_with_prophet(aggregated_df, date_column, 'y', period, seasonality, additional_columns)
                 st.plotly_chart(plot_forecast(model, forecast))
